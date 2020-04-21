@@ -4,7 +4,7 @@ env/
 __pycache__/
 test.db
 starter_code/
-env
+.env
 node_modules/
 starter/
 migrations/

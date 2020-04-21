@@ -4,7 +4,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from models import setup_db
+from models import setup_db, Actor, Movie
 # from .auth.auth import AuthError, requires_auth
 
 #----------------------------------------------------------------------------#
@@ -30,11 +30,10 @@ def create_app():
 
     @app.route('/')
     def home():
-        return 'healthy'
+        return 'Home'
 
-    '''
+    
     @app.route('/actors')
-    # @requires_auth('get:actors')
     def get_actors():
         try:
             actors = [actor.format() for actor in Actor.query.all()]
@@ -44,7 +43,7 @@ def create_app():
             }), 200
         except Exception:
             abort(404)
-    '''
+   
     '''
     @app.route('/movies')
     # @requires_auth('get:movies')
