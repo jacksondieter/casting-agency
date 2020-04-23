@@ -10,18 +10,19 @@ from auth import AuthError, requires_auth
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
+
+
 def create_app():
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
 
-
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers',
-                            'Content-Type, Authorization')
+                             'Content-Type, Authorization')
         response.headers.add('Access-Control-Allow-Methods',
-                            'GET,POST,PATCH,DELETE,OPTIONS')
+                             'GET,POST,PATCH,DELETE,OPTIONS')
         return response
 
     #----------------------------------------------------------------------------#
@@ -56,7 +57,6 @@ def create_app():
         except Exception:
             abort(404)
 
-
     @app.route("/actors", methods=['POST'])
     @requires_auth('post:actors')
     def add_actors(token):
@@ -69,12 +69,10 @@ def create_app():
             actor.insert()
             new_actor = Actor.query.filter_by(id=actor.id).first()
             new_actor = new_actor.format()
-            return jsonify({'success': True,'actor': new_actor})
+            return jsonify({'success': True, 'actor': new_actor})
         except Exception:
             abort(422)
 
-
-    
     @app.route("/movies", methods=['POST'])
     @requires_auth('post:movies')
     def add_movies(token):
@@ -86,10 +84,9 @@ def create_app():
             movie.insert()
             new_movie = Movie.query.filter_by(id=movie.id).first()
             new_movie = new_movie.format()
-            return jsonify({'success': True,'movie': new_movie})
+            return jsonify({'success': True, 'movie': new_movie})
         except Exception:
             abort(422)
-
 
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
     @requires_auth('patch:actors')
@@ -113,7 +110,6 @@ def create_app():
         except Exception:
             abort(404)
 
-
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
     @requires_auth('patch:movies')
     def patch_movie(token, movie_id):
@@ -134,7 +130,6 @@ def create_app():
         except Exception:
             abort(404)
 
-
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
     def delete_actor(token, actor_id):
@@ -149,7 +144,6 @@ def create_app():
             })
         except Exception:
             abort(404)
-
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
     @requires_auth('delete:movies')
@@ -166,7 +160,6 @@ def create_app():
         except Exception:
             abort(404)
 
-
     #----------------------------------------------------------------------------#
     # Error Handling.
     #----------------------------------------------------------------------------#
@@ -179,7 +172,6 @@ def create_app():
             "message": "bad request"
         }), 400
 
-
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
@@ -187,7 +179,6 @@ def create_app():
             "error": 404,
             "message": "resource not found"
         }), 404
-
 
     @app.errorhandler(405)
     def method_not_allowed(error):
@@ -197,7 +188,6 @@ def create_app():
             'message': 'method not allowed'
         }, 405)
 
-
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
@@ -205,7 +195,6 @@ def create_app():
             "error": 422,
             "message": "unprocessable"
         }), 422
-
 
     @app.errorhandler(500)
     def internal_server_error(error):
@@ -215,14 +204,12 @@ def create_app():
             'message': 'Internal Server Error'
         }, 500)
 
+    #----------------------------------------------------------------------------#
+    # Error handler for AuthError.
+    #----------------------------------------------------------------------------#
 
-    '''
-    @ error handler for AuthError
-        error handler conform to general task above
-    '''
     @app.errorhandler(AuthError)
     def auth_error(e):
         return jsonify(e.error), e.status_code
-
 
     return app

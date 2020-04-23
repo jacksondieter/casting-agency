@@ -11,12 +11,9 @@ AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 ALGORITHMS = [alg]
 API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
-
-# AuthError Exception
-'''
-AuthError Exception
-A standardized way to communicate auth failure modes
-'''
+#----------------------------------------------------------------------------#
+# AuthError Exception.
+#----------------------------------------------------------------------------#
 
 
 class AuthError(Exception):
@@ -24,8 +21,10 @@ class AuthError(Exception):
         self.error = error
         self.status_code = status_code
 
+#----------------------------------------------------------------------------#
+# Utils.
+#----------------------------------------------------------------------------#
 
-# Auth Header
 
 def get_token_auth_header():
     auth = request.headers.get('Authorization', None)
@@ -138,6 +137,10 @@ def verify_decode_jwt(token):
         'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
     }, 400)
+
+#----------------------------------------------------------------------------#
+# requires_auth Decorator.
+#----------------------------------------------------------------------------#
 
 
 def requires_auth(permission=''):
