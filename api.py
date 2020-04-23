@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 
 from models import setup_db, Actor, Movie
-# from .auth.auth import AuthError, requires_auth
+from auth import AuthError, requires_auth
 
 #----------------------------------------------------------------------------#
 # App Config.
@@ -32,9 +32,9 @@ def create_app():
     def home():
         return 'Home'
 
-    
     @app.route('/actors')
-    def get_actors():
+    @requires_auth('get:actors')
+    def get_actors(token):
         try:
             actors = [actor.format() for actor in Actor.query.all()]
             return jsonify({
@@ -43,11 +43,10 @@ def create_app():
             }), 200
         except Exception:
             abort(404)
-   
-    '''
+
     @app.route('/movies')
-    # @requires_auth('get:movies')
-    def get_movies():
+    @requires_auth('get:movies')
+    def get_movies(token):
         try:
             movies = [movie.format() for movie in Movie.query.all()]
             return jsonify({
@@ -56,11 +55,10 @@ def create_app():
             }), 200
         except Exception:
             abort(404)
-    '''
 
-    '''
+
     @app.route("/actors", methods=['POST'])
-    # @requires_auth('post:actors')
+    @requires_auth('post:actors')
     def add_actors(token):
         try:
             data = request.get_json()
@@ -75,11 +73,10 @@ def create_app():
         except Exception:
             abort(422)
 
-    '''
 
-    '''
+    
     @app.route("/movies", methods=['POST'])
-    # @requires_auth('post:movies')
+    @requires_auth('post:movies')
     def add_movies(token):
         try:
             data = request.get_json()
@@ -93,11 +90,9 @@ def create_app():
         except Exception:
             abort(422)
 
-    '''
 
-    '''
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
-    # @requires_auth('patch:actors')
+    @requires_auth('patch:actors')
     def patch_actor(token, actor_id):
         try:
             data = request.get_json()
@@ -117,15 +112,14 @@ def create_app():
             })
         except Exception:
             abort(404)
-    '''
 
-    '''
+
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
-    # @requires_auth('patch:movies')
+    @requires_auth('patch:movies')
     def patch_movie(token, movie_id):
         try:
             data = request.get_json()
-            movie = movie.query.filter_by(id=movie_id).one_or_none()
+            movie = Movie.query.filter_by(id=movie_id).one_or_none()
             if movie is None:
                 abort(404)
             if 'title' in data:
@@ -139,41 +133,39 @@ def create_app():
             })
         except Exception:
             abort(404)
-    '''
 
-    '''
+
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-    # @requires_auth('delete:actors')
+    @requires_auth('delete:actors')
     def delete_actor(token, actor_id):
         try:
-            actor = actor.query.filter_by(id=actor_id).one_or_none()
+            actor = Actor.query.filter_by(id=actor_id).one_or_none()
             if actor is None:
                 abort(404)
             actor.delete()
             return jsonify({
                 'success': True,
-                'delete': actor_id
+                'deleted': actor_id
             })
         except Exception:
             abort(404)
-    '''
 
-    '''
+
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-    # @requires_auth('delete:movies')
+    @requires_auth('delete:movies')
     def delete_movie(token, movie_id):
         try:
-            movie = movie.query.filter_by(id=movie_id).one_or_none()
+            movie = Movie.query.filter_by(id=movie_id).one_or_none()
             if movie is None:
                 abort(404)
             movie.delete()
             return jsonify({
                 'success': True,
-                'delete': movie_id
+                'deleted': movie_id
             })
         except Exception:
             abort(404)
-    '''
+
 
     #----------------------------------------------------------------------------#
     # Error Handling.
@@ -218,10 +210,10 @@ def create_app():
     '''
     @ error handler for AuthError
         error handler conform to general task above
-
+    '''
     @app.errorhandler(AuthError)
     def auth_error(e):
         return jsonify(e.error), e.status_code
-    '''
+    
 
     return app

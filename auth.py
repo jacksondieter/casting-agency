@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'jacksondev.eu.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'coffee_shop'
+API_AUDIENCE = 'casting-agency'
 
 # AuthError Exception
 '''
@@ -76,7 +76,13 @@ def verify_decode_jwt(token):
     jwks = json.loads(jsonurl.read())
 
     # GET THE DATA IN THE HEADER
-    unverified_header = jwt.get_unverified_header(token)
+    try:
+        unverified_header = jwt.get_unverified_header(token)
+    except Exception:
+        raise AuthError({
+            'code': 'invalid_header',
+            'description': 'Authorization malformed.'
+        }, 401)
 
     # CHOOSE OUR KEY
     rsa_key = {}
