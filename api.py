@@ -30,7 +30,7 @@ def create_app():
 
     @app.route('/')
     def home():
-        return 'Home'
+        return 'Full Stack Casting Agency API Backend'
 
     @app.route('/actors')
     @requires_auth('get:actors')
@@ -171,13 +171,13 @@ def create_app():
     # Error Handling.
     #----------------------------------------------------------------------------#
 
-    @app.errorhandler(422)
+    @app.errorhandler(400)
     def unprocessable(error):
         return jsonify({
             "success": False,
-            "error": 422,
-            "message": "unprocessable"
-        }), 422
+            "error": 400,
+            "message": "bad request"
+        }), 400
 
 
     @app.errorhandler(404)
@@ -198,6 +198,15 @@ def create_app():
         }, 405)
 
 
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "unprocessable"
+        }), 422
+
+
     @app.errorhandler(500)
     def internal_server_error(error):
         return jsonify({
@@ -214,6 +223,6 @@ def create_app():
     @app.errorhandler(AuthError)
     def auth_error(e):
         return jsonify(e.error), e.status_code
-    
+
 
     return app
