@@ -1,3 +1,4 @@
+import os
 import json
 from flask import request, _request_ctx_stack
 from functools import wraps
@@ -5,9 +6,9 @@ from jose import jwt
 from urllib.request import urlopen
 
 
-
+alg = os.environ.get('ALGORITHMS')
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
-ALGORITHMS = os.environ.get('ALGORITHMS')
+ALGORITHMS = [alg]
 API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
 
