@@ -2,8 +2,9 @@ import os
 from sqlalchemy import Column, String, Integer, DateTime
 from flask_sqlalchemy import SQLAlchemy
 import json
+from config import config
 
-database_path = os.environ.get('DATABASE_URL')
+database_path = config.database_url
 
 db = SQLAlchemy()
 
@@ -15,9 +16,9 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
 
 
-def db_drop_and_create_all(target_db):
-    target_db.drop_all()
-    target_db.create_all()
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
 
 # ----------------------------------------------------------------------------#
 # Actors.
