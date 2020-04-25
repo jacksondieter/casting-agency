@@ -224,18 +224,6 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().delete('/movies/1', headers=self.header_producer)
         self.assertEqual(res.status_code, 200)
 
-    '''
-    def test_delete_question(self):
-        res = self.client().post('/questions', json=self.new_question2)
-        data = json.loads(res.data)
-        self.question_id = data['question_id']
-        res = self.client().delete('/questions/{}'.format(self.question_id))
-        data = json.loads(res.data)
-
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
-'''
-
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
